@@ -7,11 +7,14 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.net.URI;
 import java.util.List;
+
 
 @Api("API for CRUD operations on a user")
 @RestController
@@ -40,17 +43,18 @@ public class UserController {
 
     @ApiOperation(value = "Register a user")
     @PostMapping(value = "Users")
-    public ResponseEntity<Void> register(@RequestBody User user){
+    public ResponseEntity<User> register(@RequestBody User user){
 
-        User user1 = userDao.save(user);
-
-        if (user == null){
-            return ResponseEntity.noContent().build();
+        if (StringUtils.isEmpty(user.getLogin())){
+            return ResponseEntity.badRequest().build();
         }
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{login}").buildAndExpand(user1.getLogin()).toUri();
+        if (this.userDao.findByLogin(user.getLogin()) == null) {
+            return ResponseEntity.ok().body(userDao.save(user));
+        }
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.badRequest().build();
+
     }
 
     @ApiOperation(value = "Delete a specific user from the system")

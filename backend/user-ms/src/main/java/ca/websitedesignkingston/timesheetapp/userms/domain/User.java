@@ -19,7 +19,6 @@ public class User {
     private String firstname;
     private String lastname;
 
-    @JsonIgnore
     @NotEmpty
     private String password;
 

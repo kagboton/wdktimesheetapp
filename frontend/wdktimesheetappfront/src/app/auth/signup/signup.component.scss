@@ -1,0 +1,71 @@
+form {
+
+  fieldset {
+    display: flex;
+    flex: 0 0 calc(100% - 20px);
+    flex-direction: row;
+    margin-top: 20px;
+    padding-top: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #006699;
+
+    legend {
+      padding-left: 5px;
+      padding-right: 10px;
+    }
+  }
+
+  mat-form-field {
+    margin-right: 20px;
+    margin-bottom: 5px;
+  }
+
+  .fields-line {
+    display: flex;
+    flex: 0 0 100%;
+    flex-direction: row;
+  }
+
+  .marge-top {
+    margin-top: 15px;
+  }
+
+  .row {
+    display: flex;
+    margin: 0 -10px;
+
+    &.wrap {
+      flex-wrap: wrap;
+    }
+
+    @media screen and (max-width: 450px) {
+      flex-direction: column;
+      margin: 0;
+    }
+
+    * {
+      margin: 0 10px;
+
+      @media screen and (max-width: 450px) {
+        margin: 0;
+      }
+    }
+  }
+
+  .form-w25 {
+    flex: 0 0 calc(25% - 20px);
+
+    @media screen and (max-width: 450px) {
+      flex: 0 0 calc(100% - 20px);
+    }
+  }
+
+  .btn-save {
+    top: auto;
+    right: 30px;
+    bottom: 20px;
+    left: auto;
+    position: fixed !important;
+    z-index: 100;
+  }
+}
