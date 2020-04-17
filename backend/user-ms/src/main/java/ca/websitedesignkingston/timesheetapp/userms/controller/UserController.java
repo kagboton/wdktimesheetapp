@@ -18,6 +18,7 @@ import java.util.List;
 
 @Api("API for CRUD operations on a user")
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserController {
 
     @Autowired
@@ -25,14 +26,14 @@ public class UserController {
 
     //Users
     @ApiOperation(value = "Get all the users registered")
-    @GetMapping(value = "Users")
+    @GetMapping(value = "users")
     public List<User> findUsers(){
         return userDao.findAll();
     }
 
     //Users/{login}
     @ApiOperation(value = "Get a specific user by his login")
-    @GetMapping(value = "Users/{login}")
+    @GetMapping(value = "users/{login}")
     public User findUser(@PathVariable String login) throws UserNotFoundException {
         User user = userDao.findByLogin(login);
         if (user == null){
@@ -42,7 +43,7 @@ public class UserController {
     }
 
     @ApiOperation(value = "Register a user")
-    @PostMapping(value = "Users")
+    @PostMapping(value = "users")
     public ResponseEntity<User> register(@RequestBody User user){
 
         if (StringUtils.isEmpty(user.getLogin())){
@@ -54,21 +55,27 @@ public class UserController {
         }
 
         return ResponseEntity.badRequest().build();
-
     }
 
     @ApiOperation(value = "Delete a specific user from the system")
-    @DeleteMapping (value = "/Users/{login}")
-    public void deleteUser(@PathVariable String login) {
+    @DeleteMapping (value = "/users/{login}")
+    public ResponseEntity<Void> deleteUser(@PathVariable String login) {
         userDao.deleteById(login);
+        return ResponseEntity.noContent().build();
     }
 
     @ApiOperation(value = "Update user details")
-    @PutMapping (value = "/Users")
-    public void updateUser(@RequestBody User user) {
-        userDao.save(user);
+    @PutMapping (value = "/users/update/{login}")
+    public ResponseEntity<User> updateUser(@RequestBody User user, @PathVariable String login) {
+        if (!StringUtils.isEmpty(login)) {
+            User user1 = this.userDao.findByLogin(login);
+            user1.setFirstname(user.getFirstname());
+            user1.setLastname(user.getLastname());
+            user1.setEmail(user.getEmail());
+            user1.setPassword(user.getPassword());
+
+            return ResponseEntity.ok().body(this.userDao.save(user1));
+        }
+        return ResponseEntity.badRequest().build();
     }
-
-
-
 }

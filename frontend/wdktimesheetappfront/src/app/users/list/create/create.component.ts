@@ -1,23 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AuthService} from '../../services/auth.service';
-import {Router} from '@angular/router';
+import {UserService} from '../../service/user.service';
 import {UserInterface} from '../../models/user.interface';
-import {equal} from 'assert';
-import {SnackBarService} from '../../services/snack-bar.service';
+import {SnackBarService} from '../../../core/services/snack-bar.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {take} from 'rxjs/operators';
 
 @Component({
   selector: 'app-signup',
-  templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.scss']
+  templateUrl: './create.component.html',
+  styleUrls: ['./create.component.scss']
 })
-export class SignupComponent {
-
+export class CreateComponent {
   form: FormGroup;
+  title = 'Create an account';
 
-  constructor(private authService: AuthService,
-              private snackBarService: SnackBarService,
-              private formBuilder: FormBuilder) {
+  constructor(
+    protected userService: UserService,
+    protected snackBarService: SnackBarService,
+    protected formBuilder: FormBuilder,
+    protected router: Router,
+    protected route: ActivatedRoute
+  ) {
     this.form = this.formBuilder.group({
       login:  ['', Validators.required],
       firstname: ['', Validators.required],
@@ -28,8 +32,9 @@ export class SignupComponent {
   }
 
   onSubmit() {
-    this.authService.post(this.form.value).subscribe(
+    this.userService.post(this.form.value).pipe(take(1)).subscribe(
       (user: UserInterface) => {
+        this.router.navigate(['/users']);
         this.snackBarService.addMessage('Your account has been created with the login "' + user.login + '"');
       },
       error => this.snackBarService.addMessage('Oups ! A server error occured !')

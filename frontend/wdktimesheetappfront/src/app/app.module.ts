@@ -1,60 +1,79 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
 
-import { AppComponent } from './app.component';
-import { SignupComponent } from './auth/signup/signup.component';
-import { SigninComponent } from './auth/signin/signin.component';
-import { HeaderComponent } from './header/header.component';
-import {AuthService} from './services/auth.service';
-import {AuthGuardService} from './services/auth-guard.service';
+import {AppComponent} from './app.component';
+import {CreateComponent} from './users/list/create/create.component';
+import {LoginComponent} from './login/login.component';
+import {HeaderComponent} from './core/header/header.component';
+import {UserService} from './users/service/user.service';
+import {AuthGuardService} from './core/services/auth-guard.service';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {RouterModule, Routes} from '@angular/router';
-import { UserListComponent } from './user-list/user-list.component';
-import { SingleUserComponent } from './user-list/single-user/single-user.component';
-import { EditUserComponent } from './user-list/edit-user/edit-user.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {ListComponent} from './users/list/list.component';
+import {EditComponent} from './users/list/edit/edit.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import {SnackBarService} from './services/snack-bar.service';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatListModule} from '@angular/material/list';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {EditResolver} from './users/list/edit/edit.resolver';
+import {MatCardModule} from '@angular/material/card';
 
 const appRoutes: Routes = [
-  {path: 'auth/register', component: SignupComponent},
-  {path: 'auth/connexion', component: SigninComponent},
-  {path: 'users', component: UserListComponent},
-  {path: 'users/edit', component: EditUserComponent},
-  {path: 'users/:login', component: SingleUserComponent}
-]
+  {
+    path: 'register',
+    component: CreateComponent
+  },
+  {
+    path: 'login',
+    component: LoginComponent
+  },
+  {
+    path: 'users',
+    component: ListComponent,
+  },
+  {
+    path: 'users/edit/:login',
+    component: EditComponent,
+    resolve: {
+      user: EditResolver
+    }
+  },
+];
 
 @NgModule({
   declarations: [
     AppComponent,
-    SignupComponent,
-    SigninComponent,
+    CreateComponent,
+    LoginComponent,
     HeaderComponent,
-    UserListComponent,
-    SingleUserComponent,
-    EditUserComponent
+    ListComponent,
+    EditComponent
   ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    RouterModule.forRoot(appRoutes),
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    BrowserAnimationsModule,
-    MatIconModule,
-    MatSnackBarModule
-  ],
+    imports: [
+        BrowserModule,
+        FormsModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        RouterModule.forRoot(appRoutes),
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        BrowserAnimationsModule,
+        MatIconModule,
+        MatSnackBarModule,
+        MatListModule,
+        MatTooltipModule,
+        MatCardModule
+    ],
   providers: [
-    AuthService,
-    AuthGuardService
+    UserService,
+    AuthGuardService,
+    EditResolver
   ],
   bootstrap: [AppComponent]
 })

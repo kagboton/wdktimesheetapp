@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {MatSnackBar, MatSnackBarConfig} from '@angular/material/snack-bar';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class SnackBarService {
 
   public addMessage(message: string): void {
     const config = new MatSnackBarConfig();
-    config.duration = 4000;
+    config.duration = environment.snackbar_timer;
 
     this.snackBar.open(message, null, config);
   }

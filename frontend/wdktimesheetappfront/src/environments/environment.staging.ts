@@ -1,4 +1,4 @@
 export const environment = {
-  production: true,
+  production: false,
   snackbar_timer: 4000
 };
